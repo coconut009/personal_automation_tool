@@ -1,3 +1,4 @@
+@REM Simplified method to create admin account on windows
 @echo off
 :start
 set /p username=Please enter a username:
