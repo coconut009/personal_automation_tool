@@ -1,5 +1,4 @@
-# Defult setting
-# the guest login credential are increment by 1 
+# by default the guest login credential are increment by 1 
 
 $ServerIP = Read-Host "Enter Server IP"
 if ($ServerIP -eq ""){
