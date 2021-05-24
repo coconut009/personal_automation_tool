@@ -96,12 +96,10 @@ Start VM:								virsh start <VM_ID_OR_NAME>
 shutdown VM:							virsh shutdown <VM_ID_OR_NAME>
 reboot VM:								virsh reboot <VM_ID_OR_NAME>
 destory VM:								virsh dest <VM_ID_OR_NAME>
- 
-get VM MAC address: 				1.	virsh list
+get VM MAC address: 					1.	virsh list
 										2.	virsh dumpxml <VM_NAME> | grep "mac address" | awk -F\' '{ print $2}'
 										
 										virsh list --name | while read n ; do  [[ ! -z $n ]] && virsh domifaddr $n; done
-
 get VM IP address:						1. virsh list
 										2. virsh domifaddr <ID_from_pervious_step>																	
 <!-- VM Management -->
@@ -155,8 +153,8 @@ AWS Resize the VM disksize  (do in moba) all the following steps need to run as 
 12. 	enter 8e							"change partition type to Linux LVM"
 13. 	enter w								"make all the changed happen"
 14. 	reboot vm
-15.		command:	pvcreate /dev/sda3
-16.		command:	vgextend rhel /dev/sda3
-17. 	command:	lvextend -L+<Disk_Size_NEED_TO_ADD(size in MB)> /dev/rhel/root
-18.1 	command:	xfs_growfs /dev/rhel/root   
+15.		command:	pvcreate /dev/vda3
+16.		command:	vgextend centos /dev/vda3
+17. 	command:	lvextend -L+<Disk_Size_NEED_TO_ADD(size in MB)> /dev/centos/root
+18.1 	command:	xfs_growfs /dev/centos/root   
 18.2	command:	resize2fs /dev/centos/root  (if the pervious xfs command doesn't work)
