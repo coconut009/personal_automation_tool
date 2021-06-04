@@ -11,3 +11,5 @@ git add .
 git status //Check the changes are correct
 git commit -m “commit_message”
 git push -u origin master //git push -u origin [branchName]
+
+
