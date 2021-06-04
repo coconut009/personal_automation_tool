@@ -2,6 +2,9 @@ unzip: 									tar -zxvf <file_name>.tar.gz
 										tar -xf <file_name>.tar
 										tar -xvf <file_name>.tar.xz
 										tar -xf archive.tar.bz2tar
+										tar zxvf fileNameHere.tgz
+										unzip <file_name>.zip
+
 
 AMD GPU install Pre-20.45: 				sudo ./amdgpu-pro-install -y --opencl=legacy,pal
 AMD GPU install Vega/Navi1x+ 20.45+: 	sudo ./amdgpu-pro-install -y --opencl=rocr,legacy
@@ -11,21 +14,21 @@ LINUX blacklist:						sudo nano /etc/modprobe.d/blacklist.conf
 ubuntu:									blacklist amdgpu
 
 RHEL/CentOS:							blacklist qxl
-										blacklist amdgpu
-										blacklist amdkfd
-										
+	blacklist amdgpu
+	blacklist amdkfd
+	
 ubuntu security updates:				sudo apt-get update 
 										sudo apt-get upgrade -s | grep -i security
-										
+	
 check amdgpu package(ubuntu):			dpkg -l | grep amdgpu-pro 
 check amdgpu package(RHEL/CentOS):		rpm -qa | grep amdgpu-pro	
 
 x11vnc add AMDGPU device				sudo nano /usr/share/X11/xorg.conf.d/00-amdgpu.conf
-			
+
 Section "Device"
-           Identifier "amdgpu"
-           Driver "amdgpu"
-           BusID "PCI:2177792:0:0"
+Identifier "amdgpu"
+Driver "amdgpu"
+BusID "PCI:2177792:0:0"
 EndSection
 
 Linux check host driver version: 		modinfo gim | grep version
@@ -33,25 +36,37 @@ Linux check host driver version: 		modinfo gim | grep version
 Clinfo on LINUX:						cd /opt/amdgpu-pro/bin/clinfo	or	cd /opt/amdgpu-pro/bin/
 										./clinfo | grep 'Board name\|Max compute units\|Name\|Device OpenCL C version\|Version'
 
-										
+	
 
-uninstall DCV							sudo apt-get purge --auto-remove nice-dcv-server
+uninstall DCV							sudo apt-get purge --auto-remove nice-dcv-server 
 Install clinfo:							sudo apt install clinfo -y
 Install dependancy of glx				sudo apt install mesa-utils
 Amazon Linux install utilies			sudo yum install -y amazon-efs-utils
 Amazon Linux intall gnome terminal:		sudo yum install gnome-terminal -y
-AutoDesk Dependancy on CentOS/RHEL: 	sudo yum install openal-soft libXScrnSaver -y
+
 ubuntu multi-media package:				sudo apt-get install ubuntu-restricted-extras
 ubuntu install build essential:			sudo apt-get install build-essential
 
+
+AutoDesk Dependancy on CentOS/RHEL: 	sudo yum install openal-soft libXScrnSaver -y
+Maya									https://knowledge.autodesk.com/support/maya/troubleshooting/caas/CloudHelp/cloudhelp/2020/ENU/Installation-Maya/files/GUID-E7E054E1-0E32-4B3C-88F9-BF820EB45BE5-htm.html
+	sudo yum install libXp
+Mudbox:									sudo yum list available | grep libpng12
+	sudo yum install libpng12
+
+Nuke Failed to load libstudio:			sudo yum install mesa-libGLU.x86_64
+
+
+
+
 open virt-manager						sudo virt-manager
-									
+
 linux check kernel						sudo dpkg -l | grep 'linux-header\|linux-image'
 
 Amazon Linux Nebula File Install Dependancy
-										rpmkeys --import "http://pool.sks-keyservers.net/pks/lookup?op=get&search=0x3fa7e0328081bff6a14da29aa6a19b38d3d831ef" 
-										su -c 'curl https://download.mono-project.com/repo/centos7-stable.repo | tee /etc/yum.repos.d/mono-centos7-stable.repo'
-										sudo yum install mono-complete
+	rpmkeys --import "http://pool.sks-keyservers.net/pks/lookup?op=get&search=0x3fa7e0328081bff6a14da29aa6a19b38d3d831ef" 
+	su -c 'curl https://download.mono-project.com/repo/centos7-stable.repo | tee /etc/yum.repos.d/mono-centos7-stable.repo'
+	sudo yum install mono-complete
 
 
 kill all the process run by test		killall -u test
@@ -59,7 +74,7 @@ change username/usermod					sudo usermod -md /home/pvteam64 -l pvteam64 test
 change group names						sudo groupmod -n pvteam64 test
 change password							passwd test
 file transfer:							scp <file_to_copy> pvteam64@<IP_Address>:<Destination_Loction>		 
- 
+
 VNC change resolution:					xrandr -s 1920x1080
 
 Check OS release:						cat /etc/os-release 
@@ -97,23 +112,23 @@ shutdown VM:							virsh shutdown <VM_ID_OR_NAME>
 reboot VM:								virsh reboot <VM_ID_OR_NAME>
 destory VM:								virsh dest <VM_ID_OR_NAME>
 get VM MAC address: 					1.	virsh list
-										2.	virsh dumpxml <VM_NAME> | grep "mac address" | awk -F\' '{ print $2}'
-										
-										virsh list --name | while read n ; do  [[ ! -z $n ]] && virsh domifaddr $n; done
+	2.	virsh dumpxml <VM_NAME> | grep "mac address" | awk -F\' '{ print $2}'
+	
+	virsh list --name | while read n ; do  [[ ! -z $n ]] && virsh domifaddr $n; done
 get VM IP address:						1. virsh list
-										2. virsh domifaddr <ID_from_pervious_step>																	
+	2. virsh domifaddr <ID_from_pervious_step>																	
 <!-- VM Management -->
- 
+
 AWS test/DCV set up:
 sudo modprobe amdgpu
 dpkg -l | grep amdgpu-pro 
 cd /home/sriov
 ./reconnectDCV.sh
-  
+
 AWS_DCV Reconnect  
 use the following command for reconnect: 
 systemctl stop lightdm
-modprobe amdgpu virtual_display=all
+modprobe amdgpu virtual_display=all,3
 systemctl start lightdm
 systemctl restart dcvserver
 
@@ -155,6 +170,6 @@ AWS Resize the VM disksize  (do in moba) all the following steps need to run as 
 14. 	reboot vm
 15.		command:	pvcreate /dev/vda3
 16.		command:	vgextend centos /dev/vda3
-17. 	command:	lvextend -L+<Disk_Size_NEED_TO_ADD(size in MB)> /dev/centos/root
+17. 	command:	lvextend -L+<Disk_Size_NEED_TO_ADD(size in MB - 4)> /dev/centos/root
 18.1 	command:	xfs_growfs /dev/centos/root   
 18.2	command:	resize2fs /dev/centos/root  (if the pervious xfs command doesn't work)
